@@ -1,0 +1,1231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>JAYU PET Dental Wipes Game</title>
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1354831389950247');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1354831389950247&ev=PageView&noscript=1" /></noscript>
+<style>
+:root{
+  --red:#bd302d;--pink:#f29aa6;--mint:#9bd6a6;--yellow:#f2c44f;
+  --ink:#342722;--cream:#fff8ed;--panel:#fffdf8;--line:#2f2926;
+  --pad-h:calc(max(8px,env(safe-area-inset-left)) + max(8px,env(safe-area-inset-right)));
+  --pad-v:calc(max(8px,env(safe-area-inset-top)) + max(8px,env(safe-area-inset-bottom)));
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;overscroll-behavior:none}
+body{
+  min-height:100vh;min-height:100dvh;background:#f7eadc;color:var(--ink);
+  font-family:Arial,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  user-select:none;-webkit-user-select:none;
+}
+button{font:inherit;color:inherit}
+img{display:block;pointer-events:none;-webkit-user-drag:none;-webkit-touch-callout:none}
+.app{
+  width:100%;height:100%;display:grid;place-items:center;padding:
+  max(8px,env(safe-area-inset-top)) max(8px,env(safe-area-inset-right))
+  max(8px,env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));
+}
+.phone{
+  position:relative;overflow:hidden;container-type:inline-size;
+  width:min(460px,calc(100vw - var(--pad-h)),calc((100dvh - var(--pad-v)) * 460 / 860));
+  aspect-ratio:460/860;
+  border-radius:28px;background:var(--cream);box-shadow:0 18px 50px #8b604833;
+  border:2px solid #ead7c3;isolation:isolate;
+}
+.screen{position:absolute;inset:0;display:none;overflow:hidden}
+.screen.active{display:block}
+.topbar{
+  position:absolute;z-index:30;top:12px;left:14px;right:14px;display:flex;
+  align-items:center;justify-content:space-between;pointer-events:none;
+}
+.brand{font-weight:900;letter-spacing:.12em;color:var(--red);font-size:13px}
+.sound{
+  pointer-events:auto;width:42px;height:42px;border:0;border-radius:50%;
+  background:#fff;box-shadow:0 4px 12px #5d3a2622;font-size:19px;cursor:pointer;
+}
+.primary,.secondary{
+  min-height:52px;border:0;border-radius:999px;padding:0 25px;font-weight:900;
+  letter-spacing:.06em;cursor:pointer;box-shadow:0 7px 18px #71382d2a;
+}
+.primary{background:var(--red);color:#fff}
+.secondary{background:#fff;border:2px solid #dfc7b3}
+.primary:active,.secondary:active{transform:scale(.97)}
+
+/* home */
+.home{
+  background:
+    linear-gradient(#eef4f899,#eef4f833),
+    url("asset/images/american-home-bathroom-bg-v2.png") center/cover no-repeat;
+}
+.room-ring{display:none}
+.character-wrap{
+  position:absolute;inset:0;overflow:hidden;
+  animation:breathe 4s ease-in-out infinite;transform-origin:50% 70%;
+}
+.character{
+  position:absolute;left:50%;top:23%;width:auto;height:88%;
+  transform:translateX(-50%);object-fit:contain;
+  filter:drop-shadow(0 12px 10px #3c506328);transition:none;
+}
+.character.idle{animation:idleFace 4s linear infinite}
+.character.exhale{opacity:0;animation:exhaleFace 4s linear infinite}
+.character.complete{display:none}
+.home.is-complete .character-wrap{animation:none}
+.home.is-complete .character.idle,.home.is-complete .character.exhale{display:none}
+.home.is-complete .character.complete{display:block}
+.smile-fx{
+  position:absolute;z-index:4;left:50%;top:62.5%;width:104px;height:58px;
+  transform:translate(-50%,-50%);display:none;pointer-events:none;
+}
+.home.is-complete .smile-fx{display:block}
+.smile-sweep{
+  position:absolute;left:23px;top:25px;width:58px;height:17px;border-radius:50%;overflow:hidden;
+  transform:rotate(-2deg);
+}
+.smile-sweep::after{
+  content:"";position:absolute;inset:-8px auto -8px -18px;width:13px;
+  background:linear-gradient(90deg,transparent,#fff9,transparent);
+  filter:blur(.4px);transform:skewX(-18deg);
+  animation:smileSweep 2.8s ease-in-out infinite;
+}
+.smile-fx i{
+  position:absolute;width:11px;height:11px;opacity:0;
+  animation:smileSparkle 1.8s ease-in-out infinite;
+}
+.smile-fx i::before,.smile-fx i::after{
+  content:"";position:absolute;left:50%;top:50%;background:#fff;border-radius:999px;
+  box-shadow:0 0 5px #fff8;
+}
+.smile-fx i::before{width:3px;height:100%;transform:translate(-50%,-50%)}
+.smile-fx i::after{width:100%;height:3px;transform:translate(-50%,-50%)}
+.smile-fx i:nth-of-type(1){left:8px;top:18px;animation-delay:-.2s}
+.smile-fx i:nth-of-type(2){right:7px;top:12px;animation-delay:-.8s;transform:scale(.72)}
+.smile-fx i:nth-of-type(3){left:19px;bottom:2px;animation-delay:-1.25s;transform:scale(.62)}
+.smile-fx i:nth-of-type(4){right:18px;bottom:0;animation-delay:-1.55s;transform:scale(.82)}
+@keyframes smileSweep{
+  0%,28%{transform:translateX(0);opacity:0}
+  36%{opacity:.9}
+  56%{transform:translateX(78px);opacity:.7}
+  62%,100%{transform:translateX(78px);opacity:0}
+}
+@keyframes smileSparkle{
+  0%,100%{opacity:0}
+  35%{opacity:.95}
+  58%{opacity:.35}
+}
+.breath{position:absolute;z-index:4;left:53%;top:52%;width:170px;height:120px;pointer-events:none}
+.breath .cloud{
+  position:absolute;left:8px;top:42px;width:42px;height:33px;border-radius:50%;
+  background:#c9c96fc4;opacity:0;filter:blur(.25px);
+  box-shadow:17px -11px 0 2px #d8d781bd,35px 2px 0 7px #c6c66ebd,16px 14px 0 5px #d2d27abd;
+  animation:badBreath 4s ease-out infinite;
+}
+.breath .cloud:nth-child(2){animation-delay:.12s;transform:scale(.68)}
+.breath .cloud:nth-child(3){animation-delay:.24s;transform:scale(.46)}
+.breath .trail{
+  position:absolute;left:0;top:58px;width:38px;height:12px;border-top:3px solid #b89d5b;
+  border-radius:50%;opacity:0;animation:odorTrail 4s ease-out infinite;
+}
+.breath .trail.t2{top:70px;left:7px;width:31px;animation-delay:.1s}
+.breath .curl{
+  position:absolute;left:78px;top:18px;color:#88723f;font-size:27px;font-weight:900;
+  opacity:0;animation:odorCurl 4s ease-out infinite;
+}
+.home.is-complete .breath{display:none}
+.home-copy{position:absolute;z-index:8;left:20px;right:20px;bottom:22px;text-align:center}
+.home:not(.is-complete) .home-copy h1,.home:not(.is-complete) .home-copy p{display:none}
+.home-copy h1{font-size:30px;line-height:1;margin:0 0 8px}
+.home-copy p{font-size:13px;margin:0 0 14px;color:#806e64}
+.home.is-complete .home-copy h1,.home.is-complete .home-copy p{display:none}
+.home-copy button{margin:4px}
+.shop-product-cta{
+  width:min(100%,360px);min-height:78px;margin:0 auto 9px!important;padding:6px 18px 6px 8px;
+  display:flex;align-items:center;justify-content:flex-start;gap:13px;text-align:left;
+  border:0;border-radius:24px;background:var(--red);color:#fff;
+  box-shadow:0 9px 22px #71382d3d;cursor:pointer;overflow:hidden;isolation:isolate;
+}
+.shop-product-cta[hidden]{display:none}
+.shop-product-cta .shop-thumb{
+  flex:0 0 66px;width:66px;height:66px;border-radius:18px;background:#fff;
+  display:grid;place-items:center;box-shadow:inset 0 0 0 1px #eadbd2;overflow:hidden;
+}
+.shop-product-cta img{display:block;width:59px;height:59px;object-fit:contain;border-radius:13px}
+.shop-product-cta .shop-copy{display:flex;min-width:0;flex-direction:column;gap:3px;line-height:1.08}
+.shop-product-cta small{font-size:10px;font-weight:900;letter-spacing:.13em;color:#ffd9ce}
+.shop-product-cta strong{font-size:17px;font-weight:950;letter-spacing:.035em;white-space:nowrap}
+.shop-product-cta:active{transform:scale(.98)}
+.result-fx{position:absolute;z-index:6;inset:10% 3% 18%;pointer-events:none;overflow:hidden}
+.result-fx i{position:absolute;font-style:normal;opacity:0;animation:resultFloat 2.4s ease-in-out infinite}
+.result-fx.mint i img{width:34px;height:34px;object-fit:contain}
+@keyframes resultFloat{
+  0%,100%{opacity:0;transform:translateY(18px) scale(.7) rotate(-8deg)}
+  22%,70%{opacity:.9}
+  75%{transform:translateY(-24px) scale(1.05) rotate(9deg)}
+}
+@keyframes breathe{0%,100%{transform:scale(1)}42%,58%{transform:scale(1.016)}68%{transform:scale(.998)}}
+@keyframes idleFace{0%,62%,94%,100%{opacity:1}66%,90%{opacity:0}}
+@keyframes exhaleFace{0%,62%,94%,100%{opacity:0}66%,90%{opacity:1}}
+@keyframes badBreath{
+  0%,64%{opacity:0;transform:translate(0,8px) scale(.45)}
+  69%{opacity:.82}
+  88%{opacity:.65}
+  94%,100%{opacity:0;transform:translate(72px,-24px) scale(1.18)}
+}
+@keyframes odorTrail{
+  0%,64%{opacity:0;transform:translateX(-8px) scaleX(.5)}
+  69%,84%{opacity:.72}
+  94%,100%{opacity:0;transform:translateX(42px) scaleX(1.2)}
+}
+@keyframes odorCurl{
+  0%,70%{opacity:0;transform:translate(0,8px) rotate(-12deg)}
+  76%,86%{opacity:.7}
+  94%,100%{opacity:0;transform:translate(24px,-18px) rotate(14deg)}
+}
+
+/* game */
+.game{background:linear-gradient(#f7e6dc,#fff8ef)}
+.progress{position:absolute;z-index:20;top:62px;left:16px;right:16px;height:8px;border-radius:9px;background:#ead8ca;overflow:hidden}
+.progress span{display:block;width:0;height:100%;background:linear-gradient(90deg,var(--pink),var(--red));transition:width .3s ease}
+.stage-label{position:absolute;z-index:20;top:80px;left:0;right:0;text-align:center;font-size:12px;font-weight:900;letter-spacing:.08em;color:#806d62}
+.mouth{
+  position:absolute;z-index:3;left:2%;right:2%;top:11%;height:70%;overflow:hidden;
+  border:0;border-radius:24px;background:#f9ead7;
+  box-shadow:0 12px 30px #7b443b33;touch-action:none;
+}
+.mouth-base{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:fill;object-position:center;
+  pointer-events:none;filter:sepia(.18) saturate(1.08) brightness(.98);
+  transition:filter .45s ease;
+}
+.mouth.granular-done .mouth-base{filter:sepia(.07) saturate(1.02) brightness(1.06)}
+.mouth.clean .mouth-base{filter:sepia(.03) saturate(.96) brightness(1.05)}
+.teeth{display:none}
+.tooth{
+  position:absolute;width:18%;height:35%;background:#e5c686;border:3px solid #5f493b;
+  border-radius:12px 12px 45% 45%;box-shadow:inset 0 -9px 0 #c89d60;
+  transition:background .35s,box-shadow .35s,filter .35s;
+}
+.tooth:nth-child(1){left:5%;top:0;transform:rotate(9deg)}
+.tooth:nth-child(2){left:23%;top:-3%}
+.tooth:nth-child(3){left:41%;top:-5%}
+.tooth:nth-child(4){left:59%;top:-3%}
+.tooth:nth-child(5){left:77%;top:0;transform:rotate(-9deg)}
+.tooth:nth-child(6){left:12%;bottom:0;transform:rotate(171deg)}
+.tooth:nth-child(7){left:30%;bottom:-3%;transform:rotate(180deg)}
+.tooth:nth-child(8){left:48%;bottom:-4%;transform:rotate(180deg)}
+.tooth:nth-child(9){left:66%;bottom:0;transform:rotate(189deg)}
+.game.clean .tooth{background:#fff8da;box-shadow:inset 0 -4px 0 #f0dfb0;filter:brightness(1.08)}
+.dirt{position:absolute;z-index:6;border-radius:48% 52% 42% 58%;background:#87501f;border:2px solid #5d3417;box-shadow:0 2px 0 #392116,0 0 0 5px #d9a64255;transition:opacity .25s,transform .25s}
+.dirt.cleared{opacity:0;transform:scale(.2)}
+.d1{left:13%;top:29%;width:25px;height:17px}.d2{left:25%;top:22%;width:20px;height:23px}
+.d3{left:69%;top:22%;width:20px;height:23px}.d4{left:84%;top:30%;width:25px;height:17px}
+.d5{left:10%;top:58%;width:23px;height:17px}.d6{left:21%;top:71%;width:24px;height:18px}
+.d7{left:74%;top:71%;width:24px;height:18px}.d8{left:86%;top:57%;width:20px;height:17px}
+.haze{
+  position:absolute;z-index:5;inset:13% 5% 9%;border-radius:38%;
+  background:
+    radial-gradient(ellipse at 18% 30%,#c69a4155 0 8%,transparent 15%),
+    radial-gradient(ellipse at 82% 34%,#c69a4155 0 8%,transparent 15%),
+    radial-gradient(ellipse at 28% 77%,#d2ad5250 0 9%,transparent 16%),
+    radial-gradient(ellipse at 72% 78%,#d2ad5250 0 9%,transparent 16%);
+  mix-blend-mode:multiply;transition:opacity .35s;pointer-events:none;
+}
+.mouth.granular-done .haze{opacity:.48}
+.haze.cleared{opacity:0}
+.polish-canvas{
+  position:absolute;z-index:9;inset:0;width:100%;height:100%;pointer-events:none;
+  opacity:1;mix-blend-mode:normal;
+}
+.germ{display:none}
+.germ.g1{left:29%;top:47%}.germ.g2{right:26%;top:52%;animation-delay:-.5s}
+@keyframes wobble{50%{transform:translateY(-4px) rotate(8deg)}}
+.mouth-guide{
+  display:none!important;position:absolute;z-index:12;left:50%;top:47%;width:90px;height:36px;border:4px dashed #fff9;
+  border-width:0 0 4px;border-radius:50%;transform:translate(-50%,-50%) rotate(-8deg);
+  animation:guideMove 1.2s ease-in-out infinite;pointer-events:none;
+}
+.mouth-guide.hidden{display:none}
+@keyframes guideMove{50%{transform:translate(-20%,-50%) rotate(7deg)}}
+.tool-cursor{
+  position:fixed;z-index:100;width:104px;height:164px;display:none;pointer-events:none;overflow:hidden;
+  transform:translate(-30%,-20%) rotate(-16deg);transform-origin:30% 20%;
+  filter:drop-shadow(0 8px 7px #2d1c1738);
+}
+.tool-cursor.show{display:block}
+.tool-cursor.preview{display:block;opacity:.9;animation:toolHint 1.25s ease-in-out infinite}
+@keyframes toolHint{
+  0%,100%{transform:translate(-42%,-13%) rotate(-16deg)}
+  50%{transform:translate(-10%,-13%) rotate(2deg)}
+}
+.wipe-head{
+  position:absolute;left:0;top:0;width:104px;height:164px;border:0;background-position:top center;background-size:contain;
+  background-repeat:no-repeat;
+}
+.wipe-head.granular{background-image:url("asset/images/game-tool-granular-two-fingers-v5.png")}
+.wipe-head.granular::after{
+  content:"";position:absolute;left:7%;top:3%;width:47%;height:79%;border-radius:46% 46% 22% 22%;pointer-events:none;
+  background:
+    radial-gradient(ellipse at 28% 38%,#744216 0 8%,transparent 17%),
+    radial-gradient(ellipse at 63% 66%,#a66b25 0 11%,transparent 21%),
+    radial-gradient(ellipse at 76% 27%,#83501c 0 7%,transparent 15%);
+  opacity:var(--soil,0);filter:blur(.45px);transition:opacity .18s ease;
+}
+.wipe-head.pearl{background-image:url("asset/images/game-tool-pearl-two-fingers-v5.png")}
+.finger{display:none}
+.bottom-panel{position:absolute;z-index:15;left:12px;right:12px;bottom:12px;min-height:134px;border-radius:23px;background:#fffdf9eF;border:2px solid #ead5c4;box-shadow:0 9px 24px #714a3924;padding:18px 14px 14px;text-align:center}
+.instruction{font-size:22px;font-weight:900;line-height:1.16;margin:0 0 12px}
+.mini{font-size:13px;line-height:1.35;color:#876e61}
+.mini:empty{display:none}
+.bottom-panel .primary{display:block;margin:20px auto 0}
+.bottom-panel.complete-panel .instruction{font-size:34px;margin-bottom:4px}
+.bottom-panel.complete-panel .primary{margin-top:18px}
+.bottom-panel.equip-panel{display:grid;place-items:center;padding:14px}
+.bottom-panel.equip-panel .instruction{font-size:34px;margin:0}
+.bottom-panel.action-panel{display:grid;place-items:center;padding:14px}
+.bottom-panel.action-panel .instruction{font-size:34px;margin:0}
+.mascot-guide{
+  display:none;position:absolute;z-index:2;top:-24px;bottom:-24px;width:152px;pointer-events:none;
+  background-image:url("asset/images/coco-didi-wipe-guides.png");background-repeat:no-repeat;background-size:auto 226px;
+  filter:drop-shadow(0 4px 5px #64423820);opacity:.96;
+}
+.mascot-guide.coco{left:22px;background-position:left calc(50% - 10px)}
+.mascot-guide.didi{right:22px;background-position:right calc(50% - 10px)}
+.bottom-panel.equip-panel .mascot-guide,
+.bottom-panel.granular-panel .mascot-guide.coco,
+.bottom-panel.pearl-panel .mascot-guide.didi{display:block}
+.bottom-panel .instruction,.bottom-panel .mini,.bottom-panel .primary{position:relative;z-index:3}
+.bottom-panel.equip-panel .instruction{max-width:54%}
+.bottom-panel.action-panel .instruction{max-width:58%}
+.bottom-panel.turn-layout{min-height:154px;padding-top:19px}
+.bottom-panel.turn-layout .instruction{margin-bottom:14px}
+.bottom-panel.turn-layout .primary{margin-top:22px}
+
+/* showcase */
+.showcase{position:absolute;z-index:40;inset:0;display:none;align-items:center;justify-content:center;background:#402f2b73;backdrop-filter:blur(6px)}
+.showcase.show{display:flex}
+.show-card{position:relative;width:86%;min-height:500px;background:#fff;border-radius:30px;padding:28px 20px 22px;text-align:center;box-shadow:0 20px 60px #2e17134d;overflow:hidden}
+.show-card.is-selecting{min-height:0;padding:26px 18px 24px}
+.show-card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 32%,var(--flavor,#f5c3cb) 0 13%,transparent 48%);opacity:.5}
+.show-content{position:relative;z-index:2}
+.jar{position:relative;width:190px;height:190px;margin:35px auto 18px}
+.jar img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 14px 16px #52352c2e)}
+.flavor-title{font-size:29px;font-weight:900;margin:8px 0}.flavor-copy{font-size:14px;color:#715f56;margin-bottom:20px}
+.dots{display:flex;justify-content:center;gap:8px;margin:8px 0 18px}.dots i{width:9px;height:9px;border-radius:50%;background:#dfd2c8}.dots i.on{background:var(--red);transform:scale(1.25)}
+.flavor-fx{position:absolute;inset:0;pointer-events:none}.flavor-fx i{position:absolute;animation:floaty 2.2s ease-in-out infinite;font-style:normal;font-size:25px}
+.flavor-fx i img{width:42px;height:42px;object-fit:contain;filter:drop-shadow(0 3px 4px #4f8b4638)}
+.flavor-fx i:nth-child(1){left:10%;top:18%}.flavor-fx i:nth-child(2){right:8%;top:30%;animation-delay:-.8s}.flavor-fx i:nth-child(3){left:18%;bottom:22%;animation-delay:-1.3s}
+@keyframes floaty{50%{transform:translateY(-16px) rotate(12deg)}}
+.choice-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:14px}
+.choice{
+  min-width:0;border:3px solid transparent;border-radius:18px;background:#fff;padding:8px 4px 10px;min-height:150px;cursor:pointer;box-shadow:0 5px 14px #4a2e2317;
+}
+.choice .game-jar{
+  display:block;position:relative;width:100%;max-width:76px;aspect-ratio:1/1;margin:10px auto 8px;
+}
+.choice .game-jar img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 5px 6px #52352c26)}
+.choice b{display:block;font-size:10px}.choice:active{transform:scale(.96)}
+
+/* equip */
+.equip-stage{position:absolute;inset:22.83cqw 3.91cqw 30cqw;display:grid;place-items:center}
+.equip-hand{
+  position:absolute;left:50%;bottom:-4.35cqw;width:61.96cqw;height:auto;transform:translateX(-50%);
+  filter:drop-shadow(0 10px 12px #54332824);transition:opacity .18s ease;
+}
+.equip-hand.fitted-hand{opacity:0}
+.equip-wipe{
+  position:absolute;z-index:5;left:50%;top:11%;width:22.61cqw;height:auto;transform:translate(-50%,-50%);
+  filter:drop-shadow(0 8px 10px #4d302b2a);pointer-events:auto;touch-action:none;cursor:grab;
+}
+.equip-stage::before{
+  content:"";position:absolute;z-index:4;left:50%;top:25%;width:25.22cqw;height:12.61cqw;transform:translate(-50%,-50%);
+  background:
+    radial-gradient(circle at 29% 50%,transparent 4.35cqw,#d44a4638 4.57cqw 5cqw,transparent 5.22cqw),
+    radial-gradient(circle at 72% 50%,transparent 4.35cqw,#d44a4638 4.57cqw 5cqw,transparent 5.22cqw);
+  opacity:.55;transition:opacity .15s ease,filter .15s ease;pointer-events:none;
+}
+.equip-stage.align-ready::before{
+  opacity:1;filter:drop-shadow(0 0 8px #39a965);
+  background:
+    radial-gradient(circle at 29% 50%,transparent 4.13cqw,#39a965 4.35cqw 5.22cqw,transparent 5.43cqw),
+    radial-gradient(circle at 72% 50%,transparent 4.13cqw,#39a965 4.35cqw 5.22cqw,transparent 5.43cqw);
+}
+.equip-stage::after{
+  content:"⇩";position:absolute;z-index:6;left:50%;top:17%;transform:translateX(-50%);
+  font-size:8.26cqw;color:var(--red);font-weight:900;animation:bob .8s ease-in-out infinite;pointer-events:none;
+}
+.equip-stage.align-ready::after{
+  content:"✓";top:15%;width:10.43cqw;height:10.43cqw;border-radius:50%;display:grid;place-items:center;
+  color:#fff;background:#39a965;font-size:6.74cqw;animation:none;box-shadow:0 6px 16px #26734442;
+}
+.equip-wipe.fitted{transition:all .38s ease;left:50%;top:42%;width:23.91cqw;opacity:0}
+.equip-stage.is-fitted::before{opacity:0}
+.equip-stage.is-fitted::after{opacity:0}
+.equip-stage.is-fitted .ready-hand{opacity:0}
+.equip-stage.is-fitted .fitted-hand{opacity:1}
+@keyframes bob{50%{transform:translateY(-8px)}}
+
+/* flip / complete */
+.flip-card{
+  position:absolute;inset:19% 10% 25%;display:grid;place-items:center;
+  perspective:900px;pointer-events:none;
+}
+.flip-visual{
+  position:relative;width:170px;height:270px;transform-style:preserve-3d;
+  filter:drop-shadow(0 14px 14px #6d47382f);
+}
+.flip-face{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:contain;
+  backface-visibility:hidden;transform-style:preserve-3d;
+}
+.flip-face.front{opacity:1;transform:rotateY(0) scale(1)}
+.flip-face.back{opacity:0;transform:rotateY(-90deg) scale(.88)}
+.flip-card.is-flipping .flip-face.front{animation:granularAway .45s ease-in forwards}
+.flip-card.is-flipping .flip-face.back{animation:pearlArrive .55s .42s ease-out forwards}
+@keyframes granularAway{
+  0%{opacity:1;transform:rotateY(0) scale(1)}
+  100%{opacity:0;transform:rotateY(90deg) scale(.88)}
+}
+@keyframes pearlArrive{
+  0%{opacity:0;transform:rotateY(-90deg) scale(.88)}
+  100%{opacity:1;transform:rotateY(0) scale(1)}
+}
+.shine{position:absolute;z-index:15;inset:0;display:none;pointer-events:none}
+.shine.show{display:block}
+.shine::before{content:"";position:absolute;left:-30%;top:10%;width:18%;height:80%;background:linear-gradient(90deg,transparent,#fff,transparent);transform:skewX(-18deg);animation:sweep 1s ease-out forwards}
+@keyframes sweep{to{left:120%}}
+.sparkles{position:absolute;z-index:18;inset:0;pointer-events:none}
+.sparkles i{position:absolute;font-style:normal;color:var(--fx-color,#f29aa6);animation:pop .9s ease-out forwards}
+@keyframes pop{0%{opacity:0;transform:scale(.2)}45%{opacity:1;transform:scale(1.4)}100%{opacity:0;transform:translateY(-30px) scale(.7)}}
+.complete-actions{display:flex;flex-direction:column;gap:8px;align-items:center}.complete-actions .primary{font-size:12px}
+.disabled{opacity:.48;cursor:not-allowed}
+
+@media (max-height:680px){
+  .phone{border-radius:18px}.bottom-panel{min-height:116px;padding:12px 9px 9px}.instruction{font-size:19px;margin-bottom:9px}.bottom-panel .primary{margin-top:13px}
+  .show-card{min-height:440px;padding-top:15px}.jar{width:150px;height:158px;margin-top:28px}.home-copy h1{font-size:24px}
+}
+@media (orientation:landscape) and (max-height:600px){
+  .phone{width:min(100%,900px);max-width:900px;aspect-ratio:auto;height:100%}.mouth{left:4%;right:49%;top:13%;height:74%}.bottom-panel{left:54%;right:3%;bottom:12%;min-height:160px;display:grid;place-items:center}.stage-label{left:50%}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+}
+</style>
+</head>
+<body>
+<main class="app">
+  <section class="phone" id="phone">
+    <div class="topbar"><div class="brand">JAYU PET</div><button class="sound" id="soundBtn" aria-label="Toggle sound">🔊</button></div>
+
+    <section class="screen home active" id="homeScreen">
+      <div class="room-ring"></div>
+      <div class="character-wrap">
+        <img class="character idle" src="asset/images/character-pajamas-no-glasses-transparent-cropped.png" alt="Cute dog character">
+        <img class="character exhale" src="asset/images/character-pajamas-exhale-v2-transparent-cropped-color-matched.png" alt="" aria-hidden="true">
+        <img class="character complete" src="asset/images/character-pajamas-complete-transparent-cropped-color-matched.png" alt="Happy dog character">
+        <div class="smile-fx" aria-hidden="true"><span class="smile-sweep"></span><i></i><i></i><i></i><i></i></div>
+      </div>
+      <div class="breath" id="breath" aria-hidden="true">
+        <i class="cloud"></i><i class="cloud"></i><i class="cloud"></i>
+        <i class="trail"></i><i class="trail t2"></i><b class="curl">〰</b>
+      </div>
+      <div class="result-fx" id="resultFx" aria-hidden="true"></div>
+      <div class="home-copy">
+        <h1 id="homeTitle">Uh-oh…</h1>
+        <p id="homeSub">Time for a fresh smile!</p>
+        <button class="shop-product-cta" id="shopBtn" hidden>
+          <span class="shop-thumb"><img id="shopThumbImg" src="asset/images/product-unscented.png" alt="JAYU PET Unscented Dental Wipes"></span>
+          <span class="shop-copy"><small id="shopLabelSmall">UNSCENTED</small><strong>SHOP ON AMAZON</strong></span>
+        </button>
+        <button class="primary" id="playBtn">PLAY</button>
+      </div>
+    </section>
+
+    <section class="screen game" id="gameScreen">
+      <div class="progress"><span id="progressFill"></span></div>
+      <div class="stage-label" id="stageLabel">CHECK</div>
+      <div class="mouth" id="mouth">
+        <img class="mouth-base" id="mouthBase" src="asset/images/dog-mouth-game-closeup-v4-cool-tile.png" alt="Open dog mouth ready for cleaning">
+        <canvas class="polish-canvas" id="polishCanvas" aria-hidden="true"></canvas>
+        <div class="teeth">
+          <i class="tooth"></i><i class="tooth"></i><i class="tooth"></i><i class="tooth"></i><i class="tooth"></i>
+          <i class="tooth"></i><i class="tooth"></i><i class="tooth"></i><i class="tooth"></i>
+        </div>
+        <i class="dirt d1"></i><i class="dirt d2"></i><i class="dirt d3"></i><i class="dirt d4"></i>
+        <i class="dirt d5"></i><i class="dirt d6"></i><i class="dirt d7"></i><i class="dirt d8"></i>
+        <span class="germ g1">✹</span><span class="germ g2">✹</span>
+        <div class="haze" id="haze"></div><div class="mouth-guide hidden" id="mouthGuide"></div>
+        <div class="shine" id="shine"></div><div class="sparkles" id="sparkles"></div>
+      </div>
+      <div class="equip-stage" id="equipStage" hidden>
+        <img class="equip-hand ready-hand" src="asset/images/equip-hand-ready-v2.png" alt="Index and middle fingers extended, ready to fit the dental wipe">
+        <img class="equip-wipe" id="equipWipe" src="asset/images/equip-wipe-granular-v5.png" alt="Dental wipe with a long index-finger pocket and short middle-finger retention loop">
+        <img class="equip-hand fitted-hand" src="asset/images/equip-hand-fitted-v2.png" alt="Dental wipe secured on index and middle fingers">
+      </div>
+      <div class="flip-card" id="flipCard" hidden>
+        <div class="flip-visual">
+          <img class="flip-face front" src="asset/images/game-tool-granular-two-fingers-v5.png" alt="Blue 3D granular cleaning side">
+          <img class="flip-face back" src="asset/images/game-tool-pearl-two-fingers-v5.png" alt="White embossed finishing side">
+        </div>
+      </div>
+      <div class="bottom-panel" id="bottomPanel">
+        <span class="mascot-guide coco" aria-hidden="true"></span>
+        <span class="mascot-guide didi" aria-hidden="true"></span>
+        <div class="instruction" id="instruction">Look at those teeth!</div>
+        <div class="mini" id="miniText">Tap to choose a dental wipe.</div>
+        <button class="primary" id="continueBtn">CONTINUE</button>
+      </div>
+    </section>
+
+    <div class="showcase" id="showcase">
+      <article class="show-card" id="showCard">
+        <div class="flavor-fx" id="flavorFx"></div>
+        <div class="show-content" id="showContent"></div>
+      </article>
+    </div>
+    <div class="tool-cursor" id="toolCursor"><div class="finger"></div><div class="wipe-head granular" id="cursorHead"></div></div>
+  </section>
+</main>
+<script>
+(()=>{
+"use strict";
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+const STATE_ORDER=["home","mouthIntro","productShowcase","productSelect","equipWipe","cleanGranular","flipWipe","cleanPearl","mouthComplete","purchaseCta"];
+const FLAVORS=[
+  {id:"unscented",name:"UNSCENTED",copy:"Clean & gentle",color:"#f29aa6",icon:"✦",product:"asset/images/product-unscented-transparent.png",amazonUrl:"https://www.amazon.com/JAYU-PET-Unscented-Dental-Finger/dp/B0GY1KY7YP?maas=maas_adg_67F1FA8EB088A576D5375DBCB670E10E_afap_abs&ref_=aa_maas&tag=maas"},
+  {id:"mint",name:"MINT",copy:"Cool mint scent",color:"#9bd6a6",icon:"🌿",iconAsset:"asset/images/mint-leaves-icon.png",product:"asset/images/product-mint-transparent.png",amazonUrl:"https://www.amazon.com/JAYU-PET-Scent-Dental-Finger/dp/B0GY1PB2X7?maas=maas_adg_F7D6853E04DC903598D161EE63BCC20C_afap_abs&ref_=aa_maas&tag=maas"},
+  {id:"peanutButter",name:"PEANUT BUTTER",copy:"Tasty peanut butter scent",color:"#f2c44f",icon:"🥜",product:"asset/images/product-peanut-butter-transparent.png",amazonUrl:"https://www.amazon.com/JAYU-PET-Peanut-Butter-Dental/dp/B0GY1LXDDV?maas=maas_adg_30ABE491239F4EEF84F025371CCCDE06_afap_abs&ref_=aa_maas&tag=maas"}
+];
+const previewParams=new URLSearchParams(location.hash.startsWith("#")?location.hash.slice(1):location.search);
+const resultPreview=previewParams.get("preview")==="result";
+const previewFlavor=FLAVORS.some(f=>f.id===previewParams.get("flavor"))?previewParams.get("flavor"):"mint";
+const game={
+  state:resultPreview?"purchaseCta":"home",showIndex:0,selected:resultPreview?previewFlavor:null,dragging:false,pointerId:null,mode:null,
+  granular:new Set(),granularWear:Array(8).fill(0),granularRubs:Array(8).fill(0),
+  granularTravel:Array(8).fill(0),lastNormalized:null,pearl:new Set(),
+  pearlWear:Array(12).fill(0),pearlRubs:Array(12).fill(0),pearlTravel:Array(12).fill(0),
+  muted:false,completed:resultPreview
+};
+let equipDragStartY=null,equipGrabOffsetX=0,equipGrabOffsetY=0,equipAligned=false,equipLastX=0,equipLastY=0;
+const DIRT_TARGETS=[
+  {x:.16,y:.30,r:.09},{x:.28,y:.24,r:.09},{x:.72,y:.24,r:.09},{x:.86,y:.31,r:.09},
+  {x:.13,y:.59,r:.09},{x:.24,y:.72,r:.09},{x:.77,y:.72,r:.09},{x:.88,y:.58,r:.09}
+];
+const PEARL_TARGETS=[
+  {x:.18,y:.22,r:.12},{x:.50,y:.20,r:.12},{x:.82,y:.22,r:.12},
+  {x:.12,y:.43,r:.13},{x:.88,y:.43,r:.13},{x:.17,y:.68,r:.13},
+  {x:.50,y:.78,r:.13},{x:.83,y:.68,r:.13},{x:.24,y:.34,r:.10},
+  {x:.76,y:.34,r:.10},{x:.25,y:.74,r:.10},{x:.75,y:.74,r:.10}
+];
+const els={
+  home:$("#homeScreen"),game:$("#gameScreen"),homeTitle:$("#homeTitle"),homeSub:$("#homeSub"),breath:$("#breath"),resultFx:$("#resultFx"),
+  play:$("#playBtn"),shop:$("#shopBtn"),shopThumbImg:$("#shopThumbImg"),shopLabel:$("#shopLabelSmall"),sound:$("#soundBtn"),mouth:$("#mouth"),progress:$("#progressFill"),stage:$("#stageLabel"),instruction:$("#instruction"),mini:$("#miniText"),
+  continue:$("#continueBtn"),showcase:$("#showcase"),showCard:$("#showCard"),showContent:$("#showContent"),flavorFx:$("#flavorFx"),
+  equipStage:$("#equipStage"),equipWipe:$("#equipWipe"),flipCard:$("#flipCard"),guide:$("#mouthGuide"),tool:$("#toolCursor"),cursorHead:$("#cursorHead"),
+  haze:$("#haze"),shine:$("#shine"),sparkles:$("#sparkles"),bottom:$("#bottomPanel"),
+  mouthBase:$("#mouthBase"),polishCanvas:$("#polishCanvas")
+};
+let audioCtx=null,noiseBuffer=null,lastPoint=null,sfxGate=0,guideTimer=null;
+let polishSource=null,polishCtx=null,polishOwner=null,polishTeethMask=null,polishOutput=null,polishActiveOwners=[];
+const clickAudio=new Audio("asset/audio/sfx-click-04-happy-pop-1-185286.mp3");
+const equipConfirmAudio=new Audio("asset/audio/sfx-click-04-happy-pop-1-185286.mp3");
+const sideTurnAudio=new Audio("asset/audio/sfx-side-turn-01-clean-whoosh-382726.mp3");
+const plaqueRemoveAudio=new Audio("asset/audio/sfx-plaque-remove-01-clean-minimal-pop-467466.mp3");
+clickAudio.preload="auto";clickAudio.volume=.34;
+equipConfirmAudio.preload="auto";equipConfirmAudio.volume=.20;
+sideTurnAudio.preload="auto";sideTurnAudio.loop=false;sideTurnAudio.volume=.62;
+plaqueRemoveAudio.preload="auto";plaqueRemoveAudio.volume=.76;
+// Use a compact one-second slice so each drag sounds immediate and controlled.
+const GRANULAR_SEGMENT_START=.32;
+const GRANULAR_SEGMENT_END=1.12;
+let bgmStarted=true,bgmFadeToken=0;
+let equipGainNode=null,equipLimiterNode=null;
+let granularStopTimer=null,pearlStopTimer=null;
+let granularBuffer=null,granularBufferPromise=null,granularBufferSource=null,granularBufferGain=null,granularStartPending=false;
+let pearlBuffer=null,pearlBufferPromise=null,pearlBufferSource=null,pearlBufferGain=null,pearlStartPending=false;
+let equipBuffer=null,equipBufferPromise=null;
+let bgmBuffer=null,bgmBufferPromise=null,bgmBufferSource=null,bgmGainNode=null;
+// Disabled while isolating the unexpected sound reported in the 3D cleaning step.
+const GRANULAR_AUDIO_ENABLED=true;
+const PEARL_AUDIO_ENABLED=true;
+const EQUIP_AUDIO_ENABLED=true;
+const granularBytesPromise=GRANULAR_AUDIO_ENABLED?fetch("asset/audio/sfx-scrub-granular-04-scrubbing-the-floor-36895.mp3").then(r=>{
+  if(!r.ok)throw new Error("granular audio preload failed");
+  return r.arrayBuffer();
+}).catch(()=>null):Promise.resolve(null);
+const pearlBytesPromise=PEARL_AUDIO_ENABLED?fetch("asset/audio/sfx-polish-pearl-07_paper_swipe_surface2_short_01wav-14432.mp3").then(r=>{
+  if(!r.ok)throw new Error("pearl audio preload failed");
+  return r.arrayBuffer();
+}).catch(()=>null):Promise.resolve(null);
+const equipBytesPromise=EQUIP_AUDIO_ENABLED?fetch("asset/audio/sfx-equip-wipe-03-cloth-flip-81024.mp3").then(r=>{
+  if(!r.ok)throw new Error("equip audio preload failed");
+  return r.arrayBuffer();
+}).catch(()=>null):Promise.resolve(null);
+const bgmBytesPromise=fetch("asset/audio/bgm01-the-blooms-cute-cat-marimba-rhythm-535821.mp3").then(r=>{
+  if(!r.ok)throw new Error("bgm audio preload failed");
+  return r.arrayBuffer();
+}).catch(()=>null);
+function prepareBgmBuffer(){
+  ensureAudio();
+  if(bgmBuffer)return Promise.resolve(bgmBuffer);
+  if(!bgmBufferPromise)bgmBufferPromise=bgmBytesPromise.then(bytes=>{
+    if(!bytes)return null;
+    return audioCtx.decodeAudioData(bytes.slice(0));
+  }).then(buffer=>bgmBuffer=buffer).catch(()=>null);
+  return bgmBufferPromise;
+}
+function startBgmSourceIfNeeded(){
+  if(bgmBufferSource||!bgmBuffer)return;
+  ensureAudio();
+  bgmGainNode=audioCtx.createGain();
+  bgmGainNode.gain.value=0;
+  bgmGainNode.connect(audioCtx.destination);
+  const source=audioCtx.createBufferSource();
+  source.buffer=bgmBuffer;source.loop=true;
+  source.connect(bgmGainNode);
+  source.start(0);
+  bgmBufferSource=source;
+}
+function prepareGranularBuffer(){
+  if(game.muted||!GRANULAR_AUDIO_ENABLED)return Promise.resolve(null);
+  ensureAudio();
+  if(granularBuffer)return Promise.resolve(granularBuffer);
+  if(!granularBufferPromise)granularBufferPromise=granularBytesPromise.then(bytes=>{
+    if(!bytes)return null;
+    return audioCtx.decodeAudioData(bytes.slice(0));
+  }).then(buffer=>granularBuffer=buffer).catch(()=>null);
+  return granularBufferPromise;
+}
+function preparePearlBuffer(){
+  if(game.muted||!PEARL_AUDIO_ENABLED)return Promise.resolve(null);
+  ensureAudio();
+  if(pearlBuffer)return Promise.resolve(pearlBuffer);
+  if(!pearlBufferPromise)pearlBufferPromise=pearlBytesPromise.then(bytes=>{
+    if(!bytes)return null;
+    return audioCtx.decodeAudioData(bytes.slice(0));
+  }).then(buffer=>pearlBuffer=buffer).catch(()=>null);
+  return pearlBufferPromise;
+}
+function prepareEquipBuffer(){
+  if(game.muted||!EQUIP_AUDIO_ENABLED)return Promise.resolve(null);
+  ensureAudio();
+  if(equipBuffer)return Promise.resolve(equipBuffer);
+  if(!equipBufferPromise)equipBufferPromise=equipBytesPromise.then(bytes=>{
+    if(!bytes)return null;
+    return audioCtx.decodeAudioData(bytes.slice(0));
+  }).then(buffer=>equipBuffer=buffer).catch(()=>null);
+  return equipBufferPromise;
+}
+function playClickSound(){
+  if(game.muted)return;
+  clickAudio.currentTime=0;
+  clickAudio.play().catch(()=>{});
+}
+function playPlaqueRemoveSound(){
+  if(game.muted)return;
+  const sound=plaqueRemoveAudio.cloneNode();
+  sound.volume=.76;sound.playbackRate=1.04;
+  sound.play().catch(()=>{});
+}
+function playEquipBuffer(){
+  const source=audioCtx.createBufferSource();
+  source.buffer=equipBuffer;
+  source.connect(equipGainNode);
+  source.start(0);
+}
+function playEquipSound(){
+  if(game.muted||!EQUIP_AUDIO_ENABLED)return;
+  ensureAudio();
+  if(!equipGainNode){
+    equipGainNode=audioCtx.createGain();
+    equipLimiterNode=audioCtx.createDynamicsCompressor();
+    equipGainNode.gain.value=18;
+    equipLimiterNode.threshold.value=-8;equipLimiterNode.knee.value=8;equipLimiterNode.ratio.value=6;equipLimiterNode.attack.value=.003;equipLimiterNode.release.value=.16;
+    equipGainNode.connect(equipLimiterNode).connect(audioCtx.destination);
+  }
+  fadeBgmTo(.055,120);
+  if(equipBuffer)playEquipBuffer();
+  else prepareEquipBuffer().then(()=>{if(equipBuffer)playEquipBuffer()});
+  setTimeout(()=>{
+    if(game.muted)return;
+    equipConfirmAudio.currentTime=0;
+    equipConfirmAudio.play().catch(()=>{});
+  },180);
+  setTimeout(()=>syncBgm(),900);
+}
+function stopGranularScrub(){
+  clearTimeout(granularStopTimer);granularStopTimer=null;
+  if(granularBufferSource){try{granularBufferSource.stop()}catch(_){}granularBufferSource=null}
+  if(granularBufferGain){try{granularBufferGain.disconnect()}catch(_){}granularBufferGain=null}
+}
+function warmGranularAudio(){
+  if(game.muted||!GRANULAR_AUDIO_ENABLED)return;
+  ensureAudio();
+  if(audioCtx&&audioCtx.state==="suspended")audioCtx.resume().catch(()=>{});
+  prepareGranularBuffer();
+}
+function playGranularScrub(speed=0){
+  if(game.muted||!GRANULAR_AUDIO_ENABLED)return;
+  ensureAudio();
+  if(audioCtx.state==="suspended")audioCtx.resume().catch(()=>{});
+  const normalized=Math.max(0,Math.min(1,(speed-.03)/.52));
+  const targetRate=1+normalized*2;
+  if(granularBufferSource){
+    granularBufferSource.playbackRate.setTargetAtTime(targetRate,audioCtx.currentTime,.025);
+    return;
+  }
+  if(granularBuffer){
+    const source=audioCtx.createBufferSource(),gain=audioCtx.createGain();
+    source.buffer=granularBuffer;source.loop=true;
+    source.loopStart=Math.min(GRANULAR_SEGMENT_START,Math.max(0,granularBuffer.duration-.1));
+    source.loopEnd=Math.min(GRANULAR_SEGMENT_END,granularBuffer.duration);
+    source.playbackRate.value=targetRate;gain.gain.value=3.3075;
+    source.connect(gain).connect(audioCtx.destination);
+    granularBufferSource=source;granularBufferGain=gain;
+    source.onended=()=>{if(granularBufferSource===source)granularBufferSource=null};
+    source.start(0,source.loopStart);
+    return;
+  }
+  if(!granularStartPending){
+    granularStartPending=true;
+    prepareGranularBuffer().then(()=>{
+      granularStartPending=false;
+      if(game.dragging&&game.state==="cleanGranular")playGranularScrub(speed);
+    });
+  }
+}
+function stopPearlPolish(){
+  clearTimeout(pearlStopTimer);pearlStopTimer=null;
+  if(pearlBufferSource){try{pearlBufferSource.stop()}catch(_){}pearlBufferSource=null}
+  if(pearlBufferGain){try{pearlBufferGain.disconnect()}catch(_){}pearlBufferGain=null}
+}
+function playPearlPolish(speed=0){
+  if(game.muted||!PEARL_AUDIO_ENABLED)return;
+  ensureAudio();
+  if(audioCtx.state==="suspended")audioCtx.resume().catch(()=>{});
+  const normalized=Math.max(0,Math.min(1,(speed-.025)/.48));
+  const targetRate=.9+normalized*1.9;
+  if(pearlBufferSource){
+    const current=pearlBufferSource.playbackRate.value;
+    pearlBufferSource.playbackRate.setValueAtTime(current+(targetRate-current)*.72,audioCtx.currentTime);
+    return;
+  }
+  if(pearlBuffer){
+    const source=audioCtx.createBufferSource(),gain=audioCtx.createGain();
+    source.buffer=pearlBuffer;source.loop=true;
+    source.playbackRate.value=targetRate;gain.gain.value=8.4;
+    source.connect(gain).connect(audioCtx.destination);
+    pearlBufferSource=source;pearlBufferGain=gain;
+    source.onended=()=>{if(pearlBufferSource===source)pearlBufferSource=null};
+    source.start(0);
+    return;
+  }
+  if(!pearlStartPending){
+    pearlStartPending=true;
+    preparePearlBuffer().then(()=>{
+      pearlStartPending=false;
+      if(game.dragging&&game.state==="cleanPearl")playPearlPolish(speed);
+    });
+  }
+}
+function fadeBgmTo(target,duration=360){
+  if(!bgmGainNode)return;
+  const token=++bgmFadeToken,start=bgmGainNode.gain.value,startedAt=performance.now();
+  function step(now){
+    if(token!==bgmFadeToken)return;
+    const t=Math.max(0,Math.min(1,(now-startedAt)/duration)),eased=1-Math.pow(1-t,3);
+    bgmGainNode.gain.value=start+(target-start)*eased;
+    if(t<1)requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+function syncBgm(){
+  if(!bgmStarted)return;
+  ensureAudio();
+  prepareBgmBuffer().then(()=>{
+    startBgmSourceIfNeeded();
+    if(game.muted){++bgmFadeToken;if(bgmGainNode)bgmGainNode.gain.value=0;return}
+    const inGameScreen=game.state!=="home"&&game.state!=="purchaseCta";
+    // Keep the game screen's cleaning ASMR isolated from the marimba/percussion in the BGM.
+    fadeBgmTo(inGameScreen?.15:.36,inGameScreen?180:320);
+  });
+}
+function initPolishCanvas(){
+  const img=els.mouthBase,canvas=els.polishCanvas;
+  if(!img.naturalWidth||!img.naturalHeight)return;
+  const targetWidth=Math.min(img.naturalWidth,560),scale=targetWidth/img.naturalWidth;
+  canvas.width=Math.round(targetWidth);canvas.height=Math.round(img.naturalHeight*scale);
+  polishCtx=canvas.getContext("2d",{willReadFrequently:true});
+  const source=document.createElement("canvas");
+  source.width=canvas.width;source.height=canvas.height;
+  const sourceCtx=source.getContext("2d",{willReadFrequently:true});
+  sourceCtx.drawImage(img,0,0,source.width,source.height);
+  polishSource=sourceCtx.getImageData(0,0,source.width,source.height);
+  const w=canvas.width,h=canvas.height,src=polishSource.data;
+  polishOwner=new Int8Array(w*h);polishOwner.fill(-1);
+  const candidate=new Uint8Array(w*h),coreMask=new Uint8Array(w*h),acceptedMask=new Uint8Array(w*h),visited=new Uint8Array(w*h),queue=new Int32Array(w*h);
+  for(let py=0;py<h;py++){
+    const ny=py/h;
+    for(let px=0;px<w;px++){
+      const nx=px/w,p=py*w+px,o=p*4,r=src[o],g=src[o+1],b=src[o+2],a=src[o+3];
+      const lightFill=a>0&&r>148&&g>128&&b>72&&(r-g)<100&&(g-b)<125;
+      /*
+        Follow the actual tooth rows instead of one large mouth ellipse.
+        This keeps the pale muzzle above the gum line and the pale outer
+        lip corners out of the whitening mask.
+      */
+      const upperFront=nx>.29&&nx<.71&&ny>.195&&ny<.31;
+      const upperSides=(nx<.37||nx>.63)&&ny>.205&&ny<.43;
+      const lowerSides=(nx<.30||nx>.70)&&ny>.49&&ny<.775;
+      const lowerFront=nx>.18&&nx<.82&&ny>.705&&ny<.855;
+      const upperDentalBand=upperFront||upperSides;
+      const lowerDentalBand=lowerSides||lowerFront;
+      const insideMouth=((nx-.5)/.49)**2+((ny-.51)/.43)**2<1.08;
+      const core=insideMouth&&(upperDentalBand||lowerDentalBand);
+      if(lightFill&&core)coreMask[p]=1;
+      if(lightFill&&insideMouth)candidate[p]=1;
+    }
+  }
+  const neighbors=[-1,1,-w,w];
+  for(let seed=0;seed<candidate.length;seed++){
+    if(!candidate[seed]||visited[seed])continue;
+    let head=0,tail=0,sumX=0,sumY=0,touchesCore=false;
+    queue[tail++]=seed;visited[seed]=1;
+    while(head<tail){
+      const p=queue[head++],x=p%w,y=(p/w)|0;sumX+=x;sumY+=y;
+      if(coreMask[p])touchesCore=true;
+      for(const step of neighbors){
+        const next=p+step;
+        if(next<0||next>=candidate.length||visited[next]||!candidate[next])continue;
+        if((step===-1&&x===0)||(step===1&&x===w-1))continue;
+        visited[next]=1;queue[tail++]=next;
+      }
+    }
+    if(tail<90||tail>42000||!touchesCore)continue;
+    const cx=sumX/tail/w,cy=sumY/tail/h;
+    const centroidInUpper=cy>.205&&cy<.43;
+    const centroidInLowerSide=cy>.49&&cy<.775&&(cx<.30||cx>.70);
+    const centroidInLowerFront=cy>.705&&cy<.855&&cx>.18&&cx<.82;
+    if(!(centroidInUpper||centroidInLowerSide||centroidInLowerFront))continue;
+    let owner=-1,best=Infinity;
+    for(let i=0;i<PEARL_TARGETS.length;i++){
+      const t=PEARL_TARGETS[i],distance=Math.hypot(cx-t.x,cy-t.y)/t.r;
+      if(distance<1.28&&distance<best){best=distance;owner=i}
+    }
+    if(owner<0)continue;
+    for(let i=0;i<tail;i++){
+      const pixel=queue[i];
+      polishOwner[pixel]=owner;
+      acceptedMask[pixel]=1;
+    }
+    }
+  polishTeethMask=acceptedMask;
+  /*
+    Every detected tooth pixel must belong to a polishing zone. The previous
+    connected-component pass left many otherwise valid tooth pixels unowned,
+    so progress could finish without producing a visible white result.
+  */
+  for(let p=0;p<polishOwner.length;p++){
+    if(!acceptedMask[p])continue;
+    const px=p%w,py=(p/w)|0,nx=px/w,ny=py/h;
+    let owner=0,best=Infinity;
+    for(let i=0;i<PEARL_TARGETS.length;i++){
+      const t=PEARL_TARGETS[i],distance=Math.hypot(nx-t.x,ny-t.y)/t.r;
+      if(distance<best){best=distance;owner=i}
+    }
+    polishOwner[p]=owner;
+  }
+  const ownerCounts=Array(PEARL_TARGETS.length).fill(0);
+  for(let p=0;p<polishOwner.length;p++)if(polishOwner[p]>=0)ownerCounts[polishOwner[p]]++;
+  polishActiveOwners=ownerCounts.map((count,index)=>count>0?index:-1).filter(index=>index>=0);
+  canvas.dataset.ownerCounts=ownerCounts.join(",");
+  polishOutput=polishCtx.createImageData(w,h);
+  renderPolishCanvas();
+}
+function renderPolishCanvas(){
+  if(!polishCtx||!polishOwner||!polishOutput)return;
+  const w=els.polishCanvas.width,h=els.polishCanvas.height;
+  const dst=polishOutput.data,total=w*h;
+  for(let p=0;p<total;p++){
+    const owner=polishOwner[p],o=p*4;
+    const strength=game.completed&&polishTeethMask&&polishTeethMask[p]
+      ?1
+      :owner<0?0:game.pearlWear[owner];
+    if(strength<=0){dst[o+3]=0;continue}
+    dst[o]=255;dst[o+1]=255;dst[o+2]=255;
+    dst[o+3]=Math.round(255*strength);
+  }
+  polishCtx.putImageData(polishOutput,0,0);
+}
+let polishRenderQueued=false;
+function requestPolishRender(){
+  if(polishRenderQueued)return;
+  polishRenderQueued=true;
+  requestAnimationFrame(()=>{polishRenderQueued=false;renderPolishCanvas()});
+}
+function polishOwnersAt(nx,ny){
+  if(!polishOwner||!els.polishCanvas.width)return[];
+  const owners=new Set(),w=els.polishCanvas.width,h=els.polishCanvas.height;
+  const offsets=[[-.035,-.035],[0,-.035],[.035,-.035],[-.035,0],[0,0],[.035,0],[-.035,.035],[0,.035],[.035,.035]];
+  for(const [dx,dy] of offsets){
+    const x=Math.max(0,Math.min(w-1,Math.round((nx+dx)*w)));
+    const y=Math.max(0,Math.min(h-1,Math.round((ny+dy)*h)));
+    const owner=polishOwner[y*w+x];
+    if(owner>=0)owners.add(owner);
+  }
+  return[...owners];
+}
+function pearlOwnersAt(nx,ny){
+  const masked=polishOwnersAt(nx,ny);
+  if(masked.length)return masked;
+  return PEARL_TARGETS
+    .map((target,idx)=>Math.hypot(nx-target.x,ny-target.y)<=target.r?idx:-1)
+    .filter(idx=>idx>=0);
+}
+function ensureAudio(){
+  if(game.muted)return;
+  if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+  if(audioCtx.state==="suspended")audioCtx.resume();
+}
+function tone(freq=440,d=.08,type="sine",vol=.07,delay=0){
+  if(game.muted)return;ensureAudio();const t=audioCtx.currentTime+delay,o=audioCtx.createOscillator(),g=audioCtx.createGain();
+  o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(vol,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+d);
+  o.connect(g).connect(audioCtx.destination);o.start(t);o.stop(t+d+.02);
+}
+function noise(d=.07,vol=.025){
+  if(game.muted)return;ensureAudio();const len=Math.floor(audioCtx.sampleRate*d),buf=audioCtx.createBuffer(1,len,audioCtx.sampleRate),data=buf.getChannelData(0);
+  for(let i=0;i<len;i++)data[i]=(Math.random()*2-1)*(1-i/len);const src=audioCtx.createBufferSource(),g=audioCtx.createGain();src.buffer=buf;g.gain.value=vol;src.connect(g).connect(audioCtx.destination);src.start();
+}
+function textureNoise({duration=.1,volume=.025,type="bandpass",frequency=1000,q=.7,attack=.012}={}){
+  if(game.muted)return;ensureAudio();
+  const length=Math.floor(audioCtx.sampleRate*duration),buffer=audioCtx.createBuffer(1,length,audioCtx.sampleRate),data=buffer.getChannelData(0);
+  let smooth=0;
+  for(let i=0;i<length;i++){
+    const white=Math.random()*2-1;
+    smooth=smooth*.58+white*.42;
+    data[i]=smooth;
+  }
+  const now=audioCtx.currentTime,source=audioCtx.createBufferSource(),filter=audioCtx.createBiquadFilter(),gain=audioCtx.createGain();
+  source.buffer=buffer;filter.type=type;filter.frequency.value=frequency*(.92+Math.random()*.16);filter.Q.value=q;
+  gain.gain.setValueAtTime(.0001,now);gain.gain.linearRampToValueAtTime(volume,now+attack);gain.gain.exponentialRampToValueAtTime(.0001,now+duration);
+  source.connect(filter).connect(gain).connect(audioCtx.destination);source.start(now);source.stop(now+duration+.02);
+}
+function flipWhoosh(){
+  if(game.muted)return;
+  sideTurnAudio.pause();sideTurnAudio.currentTime=0;sideTurnAudio.playbackRate=1;
+  sideTurnAudio.play().catch(()=>{});
+}
+const sfx={
+  pop(){tone(560,.055,"sine",.2);tone(820,.065,"sine",.125,.035)},
+  swipe(){textureNoise({duration:.075,volume:.016,type:"highpass",frequency:1250,q:.45})},
+  scrub(speed){playGranularScrub(speed)},
+  polish(speed){playPearlPolish(speed)},
+  fit(){playEquipSound()},
+  flip(){flipWhoosh()},
+  complete(){[523,659,784,1047].forEach((f,i)=>tone(f,.22,"sine",.95,i*.1))}
+};
+function trackStep(name,params){
+  if(window.fbq)fbq("trackCustom",name,params||{});
+}
+function setState(next){
+  if(game.state==="cleanGranular"&&next!=="cleanGranular")stopGranularScrub();
+  if(game.state==="cleanPearl"&&next!=="cleanPearl")stopPearlPolish();
+  game.state=next;
+  trackStep("GameStep_"+next);
+  if(next==="equipWipe"){
+    ensureAudio();prepareEquipBuffer();
+  }
+  if(next==="cleanGranular"){
+    ensureAudio();prepareGranularBuffer();
+  }
+  if(next==="cleanPearl"){
+    ensureAudio();preparePearlBuffer();
+  }
+  if(next==="flipWipe")els.flipCard.classList.remove("is-flipping");
+  render();syncBgm();
+}
+function progressValue(){
+  const i=STATE_ORDER.indexOf(game.state);
+  if(game.state==="cleanGranular")return 52+(game.granularWear.reduce((a,b)=>a+b,0)/8)*18;
+  if(game.state==="cleanPearl"){
+    const owners=polishActiveOwners.length?polishActiveOwners:PEARL_TARGETS.map((_,i)=>i);
+    return 74+(owners.reduce((sum,i)=>sum+game.pearlWear[i],0)/owners.length)*17;
+  }
+  return Math.max(0,Math.min(100,i/(STATE_ORDER.length-2)*100));
+}
+function renderResultFlavor(){
+  const flavor=FLAVORS.find(f=>f.id===(game.selected||"unscented"))||FLAVORS[0];
+  els.shopThumbImg.src=flavor.product;
+  els.shopThumbImg.alt=`JAYU PET ${flavor.name} Dental Wipes`;
+  els.shopLabel.textContent=flavor.name;
+  if(els.resultFx.dataset.flavor===flavor.id)return;
+  els.resultFx.dataset.flavor=flavor.id;
+  els.resultFx.className=`result-fx ${flavor.id}`;
+  const icon=flavor.id==="mint"?`<img src="asset/images/mint-leaves-icon.png" alt="">`:flavor.id==="peanutButter"?"🥜":"✦";
+  els.resultFx.innerHTML=Array.from({length:10},(_,i)=>`<i style="left:${7+(i*29)%88}%;top:${12+(i*37)%72}%;animation-delay:-${(i*.23).toFixed(2)}s;font-size:${18+(i%3)*6}px;color:${flavor.color}">${icon}</i>`).join("");
+}
+function render(){
+  const home=game.state==="home"||game.state==="purchaseCta";
+  els.home.classList.toggle("active",home);els.game.classList.toggle("active",!home);
+  els.progress.style.width=progressValue()+"%";
+  els.showcase.classList.toggle("show",game.state==="productShowcase"||game.state==="productSelect");
+  els.equipStage.hidden=game.state!=="equipWipe";els.flipCard.hidden=game.state!=="flipWipe";
+  els.bottom.classList.toggle("turn-layout",game.state==="flipWipe");
+  els.bottom.classList.toggle("complete-panel",game.state==="mouthComplete");
+  els.bottom.classList.toggle("equip-panel",game.state==="equipWipe");
+  els.bottom.classList.toggle("action-panel",game.state==="cleanGranular"||game.state==="cleanPearl");
+  els.bottom.classList.toggle("granular-panel",game.state==="cleanGranular");
+  els.bottom.classList.toggle("pearl-panel",game.state==="cleanPearl");
+  els.mouth.style.visibility=(game.state==="equipWipe"||game.state==="flipWipe")?"hidden":"visible";
+  els.bottom.hidden=home||game.state==="productShowcase"||game.state==="productSelect";
+  els.guide.classList.toggle("hidden",!(game.state==="cleanGranular"||game.state==="cleanPearl")||game.dragging);
+  els.mouth.classList.toggle("clean",game.state==="mouthComplete"||game.completed);
+  els.mouth.classList.toggle("granular-done",["flipWipe","cleanPearl","mouthComplete"].includes(game.state)||game.completed);
+  els.haze.classList.toggle("cleared",game.state==="mouthComplete"||game.completed);
+  els.continue.style.display="";
+  if(home){
+    const done=game.state!=="home";
+    els.home.classList.toggle("is-complete",done);
+    els.homeTitle.textContent="";
+    els.homeSub.textContent="";
+    els.breath.style.display=done?"none":"block";
+    els.shop.hidden=game.state!=="purchaseCta";
+    els.play.textContent=done?(game.state==="purchaseCta"?"PLAY AGAIN":"CONTINUE"):"PLAY";
+    els.play.className=game.state==="purchaseCta"?"secondary":"primary";
+    if(done)renderResultFlavor();
+    else{els.resultFx.innerHTML="";els.resultFx.dataset.flavor=""}
+  }
+  if(game.state==="mouthIntro"){stage("CHECK","DIRTY TEETH","Let's clean them.","CONTINUE")}
+  if(game.state==="productShowcase"||game.state==="productSelect")renderShowcase();
+  if(game.state==="equipWipe"){stage("FIT","SLIDE DOWN","","");els.continue.style.display="none"}
+  if(game.state==="cleanGranular"){stage("WIPE","SCRUB ×10","","");els.continue.style.display="none";els.cursorHead.className="wipe-head granular"}
+  if(game.state==="flipWipe"){stage("TURN","PEARL-TEXTURED SIDE","Turn your hand for gentle finishing.","TURN")}
+  if(game.state==="cleanPearl"){stage("FINISH","POLISH ×10","","");els.continue.style.display="none";els.cursorHead.className="wipe-head pearl"}
+  if(game.state==="mouthComplete"){stage("DONE","ALL CLEAN!","","CONTINUE")}
+  const cleaning=["cleanGranular","cleanPearl"].includes(game.state);
+  if(cleaning&&!game.dragging){
+    requestAnimationFrame(()=>{
+      const r=els.mouth.getBoundingClientRect();
+      moveTool(r.left+r.width*.46,r.top+r.height*.54);
+      els.tool.classList.add("show","preview");
+    });
+  }else if(!game.dragging){
+    els.tool.classList.remove("show","preview");
+  }
+}
+function stage(label,title,sub,button){els.stage.textContent=label;els.instruction.textContent=title;els.mini.textContent=sub;els.continue.textContent=button}
+function flavorIcon(f){return f.iconAsset?`<img src="${f.iconAsset}" alt="">`:f.icon}
+function renderShowcase(){
+  const selecting=game.state==="productSelect";
+  els.showCard.classList.toggle("is-selecting",selecting);
+  if(selecting){
+    els.showCard.style.setProperty("--flavor","#f0d4c5");els.flavorFx.innerHTML="";
+    els.showContent.innerHTML=`<h2 class="flavor-title">PICK ONE</h2><p class="flavor-copy">Choose your favorite scent.</p><div class="choice-grid">${FLAVORS.map(f=>`<button class="choice" data-flavor="${f.id}" style="--c:${f.color}"><span class="game-jar"><img src="${f.product}" alt="${f.name} dental wipes"></span><b>${f.name}</b></button>`).join("")}</div>`;
+    $$(".choice").forEach(b=>b.addEventListener("click",()=>selectFlavor(b.dataset.flavor)));
+    return;
+  }
+  const f=FLAVORS[game.showIndex];els.showCard.style.setProperty("--flavor",f.color);
+  els.flavorFx.innerHTML=`<i>${flavorIcon(f)}</i><i>${flavorIcon(f)}</i><i>${flavorIcon(f)}</i>`;
+  els.showContent.innerHTML=`<div class="jar"><img src="${f.product}" alt="${f.name} dental wipes"></div><h2 class="flavor-title">${f.name}</h2><p class="flavor-copy">${f.copy}</p><div class="dots">${FLAVORS.map((_,i)=>`<i class="${i===game.showIndex?"on":""}"></i>`).join("")}</div><button class="primary" id="nextFlavor">${game.showIndex===2?"CHOOSE":"NEXT"}</button>`;
+  $("#nextFlavor").addEventListener("click",nextFlavor);
+}
+function nextFlavor(){sfx.swipe();if(game.showIndex<2){game.showIndex++;renderShowcase()}else setState("productSelect")}
+function selectFlavor(id){game.selected=id;trackStep("FlavorSelected",{flavor:id});spawnFlavorBurst(id);setTimeout(()=>setState("equipWipe"),420)}
+function spawnFlavorBurst(id){const f=FLAVORS.find(x=>x.id===id);els.flavorFx.innerHTML=Array.from({length:8},(_,i)=>`<i style="left:${10+Math.random()*80}%;top:${10+Math.random()*75}%">${flavorIcon(f)}</i>`).join("")}
+function handleContinue(){
+  ensureAudio();
+  if(game.state==="mouthIntro"){setState("productShowcase")}
+  else if(game.state==="flipWipe"){
+    if(els.flipCard.classList.contains("is-flipping"))return;
+    preparePearlBuffer();
+    sfx.flip();
+    els.flipCard.classList.add("is-flipping");
+    els.continue.disabled=true;
+    setTimeout(()=>{
+      els.continue.disabled=false;
+      setState("cleanPearl");
+    },1080);
+  }
+  else if(game.state==="mouthComplete"){game.completed=true;setState("purchaseCta")}
+}
+function reset(){
+  game.state="home";game.showIndex=0;game.selected=null;game.granular.clear();game.granularWear.fill(0);game.granularRubs.fill(0);game.granularTravel.fill(0);game.lastNormalized=null;game.pearl.clear();game.pearlWear.fill(0);game.pearlRubs.fill(0);game.pearlTravel.fill(0);game.completed=false;
+  $$(".dirt").forEach(x=>{x.classList.remove("cleared");x.style.opacity="";x.style.transform=""});if(polishCtx)polishCtx.clearRect(0,0,els.polishCanvas.width,els.polishCanvas.height);els.cursorHead.style.setProperty("--soil","0");els.haze.style.opacity="";els.shine.classList.remove("show");els.sparkles.innerHTML="";els.resultFx.innerHTML="";els.resultFx.dataset.flavor="";els.equipWipe.classList.remove("fitted");els.equipStage.classList.remove("is-fitted");els.flipCard.classList.remove("is-flipping");els.continue.disabled=false;render();
+}
+function fitWipe(){
+  if(game.state!=="equipWipe")return;game.dragging=false;els.equipWipe.classList.add("fitted");els.equipStage.classList.add("is-fitted");sfx.fit();
+  setTimeout(()=>setState("cleanGranular"),650);
+}
+function mouthPointerDown(e){
+  if(!["cleanGranular","cleanPearl"].includes(game.state))return;
+  ensureAudio();game.dragging=true;game.pointerId=e.pointerId;lastPoint={x:e.clientX,y:e.clientY,t:performance.now()};game.lastNormalized=null;els.guide.classList.add("hidden");
+  try{els.mouth.setPointerCapture(e.pointerId)}catch(_){}
+  moveTool(e.clientX,e.clientY);els.tool.classList.remove("preview");els.tool.classList.add("show");sampleSegment(lastPoint,lastPoint);
+  if(game.state==="cleanGranular")playGranularScrub(.08);
+  else if(game.state==="cleanPearl")playPearlPolish(.08);
+  e.preventDefault();
+}
+function mouthPointerMove(e){
+  if(!["cleanGranular","cleanPearl"].includes(game.state))return;
+  const now=performance.now(),p={x:e.clientX,y:e.clientY,t:now};
+  moveTool(p.x,p.y);
+  els.tool.classList.remove("preview");
+  els.tool.classList.add("show");
+  if(!game.dragging||e.pointerId!==game.pointerId)return;
+  const speed=lastPoint?Math.hypot(p.x-lastPoint.x,p.y-lastPoint.y)/Math.max(8,now-(lastPoint.t||now-16)):0;
+  if(!lastPoint)lastPoint=p;else sampleSegment(lastPoint,p);
+  lastPoint=p;
+  if(game.state==="cleanGranular")sfx.scrub(speed);
+  else if(game.state==="cleanPearl")sfx.polish(speed);
+  e.preventDefault();
+}
+function pointerUp(e){
+  if(e.pointerId!==game.pointerId)return;stopGranularScrub();stopPearlPolish();game.dragging=false;game.pointerId=null;lastPoint=null;game.lastNormalized=null;els.tool.classList.remove("show","preview");render();
+}
+function moveTool(x,y){els.tool.style.left=x+"px";els.tool.style.top=(y-12)+"px"}
+function sampleSegment(a,b){
+  if(!a||!b)return;
+  const dist=Math.hypot(b.x-a.x,b.y-a.y),steps=Math.max(1,Math.ceil(dist/10));
+  for(let i=0;i<=steps;i++)sample(a.x+(b.x-a.x)*i/steps,a.y+(b.y-a.y)*i/steps);
+}
+function sample(clientX,clientY){
+  const r=els.mouth.getBoundingClientRect(),x=(clientX-r.left)/r.width,y=(clientY-r.top)/r.height;
+  if(x<0||x>1||y<0||y>1)return;
+  if(game.state==="cleanGranular"){
+    const dirt=$$(".dirt");
+    const previous=game.lastNormalized;
+    DIRT_TARGETS.forEach((target,idx)=>{
+      if(game.granular.has(idx))return;
+      const distance=Math.hypot(x-target.x,y-target.y);
+      if(distance>target.r)return;
+      if(previous&&Math.hypot(previous.x-target.x,previous.y-target.y)<=target.r){
+        game.granularTravel[idx]+=Math.hypot(x-previous.x,y-previous.y);
+      }
+      while(game.granularTravel[idx]>=.08&&game.granularRubs[idx]<10){
+        game.granularTravel[idx]-=.08;
+        game.granularRubs[idx]++;
+      }
+      game.granularWear[idx]=game.granularRubs[idx]/10;
+      const wear=game.granularWear[idx],node=dirt[idx];
+      if(node){
+        node.style.opacity=String(1-wear*.72);
+        node.style.transform=`scale(${1-wear*.18})`;
+      }
+      if(wear>=1){
+        game.granular.add(idx);
+        if(node){node.style.opacity="";node.style.transform="";node.classList.add("cleared")}
+        playPlaqueRemoveSound();
+      }
+    });
+    game.lastNormalized={x,y};
+    const totalRubs=game.granularRubs.reduce((a,b)=>a+b,0);
+    els.cursorHead.style.setProperty("--soil",String(Math.min(.88,totalRubs/80*.88)));
+    if(game.granular.size>=8)setTimeout(()=>setState("flipWipe"),180);
+  }else{
+    const previous=game.lastNormalized;
+    let pearlChanged=false;
+    const activeOwners=pearlOwnersAt(x,y);
+    activeOwners.forEach(idx=>{
+      if(game.pearl.has(idx))return;
+      if(previous&&pearlOwnersAt(previous.x,previous.y).includes(idx)){
+        game.pearlTravel[idx]+=Math.hypot(x-previous.x,y-previous.y);
+      }
+      while(game.pearlTravel[idx]>=.08&&game.pearlRubs[idx]<10){
+        game.pearlTravel[idx]-=.08;
+        game.pearlRubs[idx]++;
+        pearlChanged=true;
+      }
+      game.pearlWear[idx]=game.pearlRubs[idx]/10;
+      if(game.pearlRubs[idx]>=10){
+        game.pearl.add(idx);
+        sfx.pop();
+      }
+    });
+    if(pearlChanged)requestPolishRender();
+    game.lastNormalized={x,y};
+    const owners=polishActiveOwners.length?polishActiveOwners:PEARL_TARGETS.map((_,i)=>i);
+    const pearlAverage=owners.reduce((sum,i)=>sum+game.pearlWear[i],0)/owners.length;
+    els.haze.style.opacity=String(Math.max(0,.48*(1-pearlAverage)));
+    if(game.pearl.size>=owners.length)completeMouth();
+  }
+  els.progress.style.width=progressValue()+"%";
+}
+function completeMouth(){
+  if(game.state!=="cleanPearl")return;game.state="mouthComplete";game.completed=true;els.shine.classList.add("show");
+  renderPolishCanvas();
+  const fx={
+    unscented:{color:"#f29aa6",icons:["✦","✧","○"]},
+    mint:{color:"#70c89a",icons:["🌿","✦","〰"]},
+    peanutButter:{color:"#e4ad3f",icons:["🥜","✦","●"]}
+  }[game.selected||"unscented"];
+  els.sparkles.style.setProperty("--fx-color",fx.color);
+  els.sparkles.innerHTML=Array.from({length:18},(_,i)=>`<i style="left:${5+Math.random()*90}%;top:${8+Math.random()*78}%;font-size:${17+Math.random()*20}px">${fx.icons[i%fx.icons.length]}</i>`).join("");
+  sfx.complete();render();
+}
+document.addEventListener("click",e=>{
+  const button=e.target.closest("button");
+  if(button&&button!==els.sound&&!(button===els.continue&&game.state==="flipWipe"))playClickSound();
+});
+document.addEventListener("click",()=>{
+  if(!game.muted){bgmStarted=true;syncBgm()}
+},{once:true});
+els.play.addEventListener("click",()=>{ensureAudio();warmGranularAudio();if(game.state==="home"){bgmStarted=true;syncBgm();setState("mouthIntro")}else reset()});
+els.shop.addEventListener("click",()=>{
+  const flavor=FLAVORS.find(f=>f.id===(game.selected||"unscented"))||FLAVORS[0];
+  trackStep("ShopClick",{flavor:flavor.id});
+  if(flavor.amazonUrl)location.href=flavor.amazonUrl;
+});
+els.continue.addEventListener("click",handleContinue);
+els.sound.addEventListener("click",()=>{game.muted=!game.muted;els.sound.textContent=game.muted?"🔇":"🔊";if(game.muted){stopGranularScrub();stopPearlPolish();sideTurnAudio.pause();sideTurnAudio.currentTime=0}else ensureAudio();syncBgm()});
+els.equipWipe.addEventListener("pointerdown",e=>{
+  ensureAudio();game.dragging=true;game.pointerId=e.pointerId;equipDragStartY=e.clientY;equipAligned=false;
+  const w=els.equipWipe.getBoundingClientRect();equipGrabOffsetX=w.left+w.width/2-e.clientX;equipGrabOffsetY=w.top+w.height/2-e.clientY;
+  try{els.equipWipe.setPointerCapture(e.pointerId)}catch(_){ }e.preventDefault()
+});
+els.equipWipe.addEventListener("pointermove",e=>{
+  if(!game.dragging||e.pointerId!==game.pointerId)return;
+  const r=els.equipStage.getBoundingClientRect();equipLastX=e.clientX+equipGrabOffsetX-r.left;equipLastY=e.clientY+equipGrabOffsetY-r.top;
+  const gateX=r.width*.5,gateY=r.height*.25;
+  if(!equipAligned&&Math.abs(equipLastX-gateX)<r.width*.17&&Math.abs(equipLastY-gateY)<r.height*.112){
+    equipAligned=true;equipLastX=gateX;els.equipStage.classList.add("align-ready");sfx.pop()
+  }
+  const insideFingerLane=equipAligned&&Math.abs(equipLastX-gateX)<r.width*.186;
+  els.equipStage.classList.toggle("align-ready",insideFingerLane);
+  els.equipWipe.style.left=equipLastX+"px";els.equipWipe.style.top=equipLastY+"px";
+  e.preventDefault()
+});
+els.equipWipe.addEventListener("pointerup",e=>{
+  if(e.pointerId!==game.pointerId)return;
+  const r=els.equipStage.getBoundingClientRect(),gateX=r.width*.5,gateY=r.height*.25;
+  const movedDown=equipDragStartY!==null&&e.clientY-equipDragStartY>45;
+  const inFingerLane=Math.abs(equipLastX-gateX)<r.width*.186&&equipLastY>gateY+r.height*.083&&equipLastY<r.height*.56;
+  game.dragging=false;game.pointerId=null;equipDragStartY=null;els.equipStage.classList.remove("align-ready");
+  els.equipWipe.style.left="";els.equipWipe.style.top="";
+  if(equipAligned&&movedDown&&inFingerLane)fitWipe();else{sfx.swipe();render()}
+});
+els.equipWipe.addEventListener("pointercancel",()=>{
+  game.dragging=false;game.pointerId=null;equipDragStartY=null;equipAligned=false;els.equipStage.classList.remove("align-ready");
+  els.equipWipe.style.left="";els.equipWipe.style.top="";render()
+});
+els.mouth.addEventListener("pointerdown",mouthPointerDown);els.mouth.addEventListener("pointermove",mouthPointerMove);els.mouth.addEventListener("pointerup",pointerUp);els.mouth.addEventListener("pointercancel",pointerUp);
+els.mouth.addEventListener("pointerleave",()=>{if(!game.dragging&&["cleanGranular","cleanPearl"].includes(game.state))render()});
+if(els.mouthBase.complete)initPolishCanvas();else els.mouthBase.addEventListener("load",initPolishCanvas,{once:true});
+render();syncBgm();
+})();
+</script>
+</body>
+</html>
